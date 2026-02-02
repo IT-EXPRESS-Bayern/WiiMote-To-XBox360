@@ -9,4 +9,12 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="HelixToolkit.Wpf" Version="3.1.2" />
+    <PackageReference Include="hidlibrary" Version="3.3.40" />
+    <PackageReference Include="Nefarius.Drivers.HidHide" Version="3.3.0" />
+    <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="5.2.0" />
+    <PackageReference Include="Nefarius.ViGEm.Client" Version="1.21.256" />
+  </ItemGroup>
+
 </Project>
