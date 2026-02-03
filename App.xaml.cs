@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
 namespace WiiMote_To_XBox360
 {
@@ -10,5 +8,4 @@ namespace WiiMote_To_XBox360
     public partial class App : Application
     {
     }
-
 }

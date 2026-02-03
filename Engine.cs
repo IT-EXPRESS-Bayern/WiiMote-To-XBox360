@@ -111,7 +111,6 @@ public class Engine
             }
         }
 
-
         double rangeToRight = _valRight - _valTable;
         double rangeToLeft = _valLeft - _valTable;
 
@@ -133,6 +132,7 @@ public class Engine
         {
             if (_wiiDevice == null || !_wiiDevice.IsConnected)
             {
+                // Suche nach Nintendo Wiimote (VID 0x057e)
                 var dev = HidDevices.Enumerate(0x057e, 0x0306).FirstOrDefault() ??
                           HidDevices.Enumerate(0x057e, 0x0330).FirstOrDefault();
 
@@ -140,13 +140,15 @@ public class Engine
                 {
                     _wiiDevice = dev;
                     _wiiDevice.OpenDevice();
-                    _wiiDevice.Write(new byte[] { 0x12, 0x00, 0x31 });
-                    _wiiDevice.Write(new byte[] { 0x11, 0x10 });
+
+                    // LEDs initialisieren und Reporting aktivieren
+                    _wiiDevice.Write(new byte[] { 0x12, 0x00, 0x31 }); // Report Mode 0x31 (Accel + Buttons)
+                    _wiiDevice.Write(new byte[] { 0x11, 0x10 });      // Player 1 LED an
 
                     OnConnectionChanged?.Invoke(true);
                     OnLog?.Invoke("VERBUNDEN! Starte Wizard.");
 
-                    // Initialwert
+                    // Initialwert lesen
                     var r = _wiiDevice.Read();
                     if (r.Status == HidDeviceData.ReadStatus.Success)
                         _valTable = GetSensorValue(r.Data);
@@ -163,12 +165,14 @@ public class Engine
         byte lastLedState = 0;
         while (_running && _wiiDevice != null && _wiiDevice.IsConnected)
         {
+            // Lese HID Report
             var report = _wiiDevice.Read(100);
             if (report.Status != HidDeviceData.ReadStatus.Success) break;
 
             byte[] data = report.Data;
             if (data.Length < 6) continue;
 
+            // Buttons auslesen (Byte 1 und 2)
             byte b1 = data[1];
             byte b2 = data[2];
 
@@ -199,7 +203,7 @@ public class Engine
             bool[] leds = CalculateLeds(_currentSmoothedAngle);
             OnInputUpdate?.Invoke(_currentSmoothedAngle, btns, leds);
 
-            // Hardware LEDs
+            // Hardware LEDs auf der Wiimote aktualisieren
             byte ledByte = (byte)((leds[0] ? 0x10 : 0) | (leds[1] ? 0x20 : 0) | (leds[2] ? 0x40 : 0) | (leds[3] ? 0x80 : 0));
             if (ledByte != lastLedState)
             {
@@ -207,7 +211,7 @@ public class Engine
                 lastLedState = ledByte;
             }
 
-            // Xbox
+            // Xbox Controller Emulation
             if (_calibrated && _xbox != null)
             {
                 double finalSteer = _currentSmoothedAngle;
@@ -222,18 +226,23 @@ public class Engine
 
                 _xbox.SetAxisValue(Xbox360Axis.LeftThumbX, (short)(steerFactor * 32767));
 
-                // Buttons
-                _xbox.SetSliderValue(Xbox360Slider.RightTrigger, (b2 & 0x01) != 0 ? (byte)255 : (byte)0);
-                _xbox.SetSliderValue(Xbox360Slider.LeftTrigger, (b2 & 0x02) != 0 ? (byte)255 : (byte)0);
-                _xbox.SetButtonState(Xbox360Button.A, (b2 & 0x04) != 0);
-                _xbox.SetButtonState(Xbox360Button.Y, (b2 & 0x08) != 0);
-                _xbox.SetButtonState(Xbox360Button.Start, (b1 & 0x10) != 0);
-                _xbox.SetButtonState(Xbox360Button.Back, (b2 & 0x10) != 0);
-                _xbox.SetButtonState(Xbox360Button.Guide, (b2 & 0x80) != 0);
-                _xbox.SetButtonState(Xbox360Button.Left, (b1 & 0x08) != 0);
-                _xbox.SetButtonState(Xbox360Button.Right, (b1 & 0x04) != 0);
-                _xbox.SetButtonState(Xbox360Button.Down, (b1 & 0x01) != 0);
-                _xbox.SetButtonState(Xbox360Button.Up, (b1 & 0x02) != 0);
+                // Mapping Buttons
+                // Gas/Bremse auf Trigger (B-Taste und A-Taste oder ähnlich)
+                _xbox.SetSliderValue(Xbox360Slider.RightTrigger, (b2 & 0x04) != 0 ? (byte)255 : (byte)0); // B-Button (Trigger)
+                _xbox.SetButtonState(Xbox360Button.A, (b2 & 0x08) != 0); // A-Button
+
+                // Weitere Buttons
+                _xbox.SetButtonState(Xbox360Button.Start, (b1 & 0x10) != 0); // Plus
+                _xbox.SetButtonState(Xbox360Button.Back, (b2 & 0x10) != 0);  // Minus
+                _xbox.SetButtonState(Xbox360Button.Guide, (b2 & 0x80) != 0); // Home
+                _xbox.SetButtonState(Xbox360Button.Left, (b1 & 0x01) != 0);
+                _xbox.SetButtonState(Xbox360Button.Right, (b1 & 0x02) != 0);
+                _xbox.SetButtonState(Xbox360Button.Down, (b1 & 0x04) != 0);
+                _xbox.SetButtonState(Xbox360Button.Up, (b1 & 0x08) != 0);
+
+                // 1 und 2 Tasten
+                _xbox.SetButtonState(Xbox360Button.X, (b2 & 0x02) != 0); // 1
+                _xbox.SetButtonState(Xbox360Button.Y, (b2 & 0x01) != 0); // 2
 
                 _xbox.SubmitReport();
             }
@@ -245,10 +254,19 @@ public class Engine
 
     private bool[] GetButtonStates(byte b1, byte b2)
     {
+        // Hilfsfunktion zum Mappen der Bytes auf ein Bool-Array für die UI
         bool[] b = new bool[11];
-        b[0] = (b2 & 0x08) != 0; b[1] = (b2 & 0x04) != 0; b[2] = (b2 & 0x02) != 0; b[3] = (b2 & 0x01) != 0;
-        b[4] = (b1 & 0x10) != 0; b[5] = (b2 & 0x10) != 0; b[6] = (b2 & 0x80) != 0; b[7] = (b1 & 0x01) != 0;
-        b[8] = (b1 & 0x02) != 0; b[9] = (b1 & 0x08) != 0; b[10] = (b1 & 0x04) != 0;
+        b[0] = (b2 & 0x08) != 0; // A
+        b[1] = (b2 & 0x04) != 0; // B
+        b[2] = (b2 & 0x02) != 0; // 1
+        b[3] = (b2 & 0x01) != 0; // 2
+        b[4] = (b1 & 0x10) != 0; // Plus
+        b[5] = (b2 & 0x10) != 0; // Minus
+        b[6] = (b2 & 0x80) != 0; // Home
+        b[7] = (b1 & 0x01) != 0; // Left
+        b[8] = (b1 & 0x02) != 0; // Right
+        b[9] = (b1 & 0x08) != 0; // Up
+        b[10] = (b1 & 0x04) != 0; // Down
         return b;
     }
 
@@ -256,7 +274,7 @@ public class Engine
     {
         bool[] l = new bool[4];
         double a = Math.Abs(angle);
-        l[0] = true;
+        l[0] = true; // LED 1 immer an (Power)
         if (a > 20) l[1] = true;
         if (a > 45) l[2] = true;
         if (a > 70) l[3] = true;

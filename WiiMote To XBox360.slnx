@@ -1,3 +1,6 @@
 <Solution>
+  <Folder Name="/Resources/">
+    <File Path="WiimoteStyles.xaml" />
+  </Folder>
   <Project Path="WiiMote To XBox360.csproj" />
 </Solution>

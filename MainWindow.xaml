@@ -21,7 +21,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00D1FF"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource CyanBrush}"/>
                                 <Setter Property="Foreground" Value="Black"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
@@ -64,7 +64,7 @@
                 </Grid>
                 <Grid Canvas.Left="53" Canvas.Top="175">
                     <Ellipse x:Name="BtnHome" Width="14" Height="14" Fill="White" Effect="{StaticResource BtnShadow}"/>
-                    <Path Data="M 6,0 L 12,5 L 10,5 L 10,10 L 2,10 L 2,5 L 0,5 Z" Fill="#00A0FF" Width="12" Height="10" Margin="0,1,0,0" Stretch="Uniform"/>
+                    <Path Data="M 6,0 L 12,5 L 10,5 L 10,10 L 2,10 L 2,5 L 0,5 Z" Fill="{StaticResource CyanBrush}" Width="12" Height="10" Margin="0,1,0,0" Stretch="Uniform"/>
                 </Grid>
                 <Grid Canvas.Left="71" Canvas.Top="175">
                     <Ellipse x:Name="BtnPlus" Width="14" Height="14" Fill="White" Effect="{StaticResource BtnShadow}"/>
@@ -137,14 +137,14 @@
                                 <RotateTransform x:Name="WiimoteRotation" Angle="0"/>
                             </Control.RenderTransform>
                         </Control>
-                        <TextBlock x:Name="TxtAngle" Text="0°" Foreground="#00D1FF" FontSize="36" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20"/>
+                        <TextBlock x:Name="TxtAngle" Text="0°" Foreground="{StaticResource CyanBrush}" FontSize="36" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="20"/>
                     </Grid>
                 </Border>
 
                 <StackPanel Grid.Column="1" x:Name="ControlPanel" Opacity="0.3" IsEnabled="False">
                     <Border Background="#181818" CornerRadius="12" Padding="20" Margin="0,0,0,15">
                         <StackPanel>
-                            <TextBlock Text="SETUP" Foreground="#00D1FF" FontWeight="Bold" Margin="0,0,0,15"/>
+                            <TextBlock Text="SETUP" Foreground="{StaticResource CyanBrush}" FontWeight="Bold" Margin="0,0,0,15"/>
                             <Grid Margin="0,0,0,5">
                                 <TextBlock Text="Empfindlichkeit" Foreground="#AAA"/>
                                 <TextBlock x:Name="TxtSens" Text="1.0x" Foreground="White" HorizontalAlignment="Right"/>
@@ -171,14 +171,14 @@
             </Grid>
 
             <Grid x:Name="CalibrationOverlay" Grid.Row="0" Grid.RowSpan="2" Panel.ZIndex="100" Background="#F2000000" Visibility="Visible">
-                <Border Background="#1A1A1A" Width="800" Height="500" CornerRadius="15" BorderBrush="#00D1FF" BorderThickness="1">
+                <Border Background="#1A1A1A" Width="800" Height="500" CornerRadius="15" BorderBrush="{StaticResource CyanBrush}" BorderThickness="1">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="70"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="80"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Text="3-STUFEN KALIBRIERUNG" Foreground="#00D1FF" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="3-STUFEN KALIBRIERUNG" Foreground="{StaticResource CyanBrush}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                         <Grid x:Name="Step1Grid" Grid.Row="1" Visibility="Visible">
                             <Grid.ColumnDefinitions>
@@ -187,7 +187,6 @@
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" Margin="20">
                                 <Rectangle Width="300" Height="4" Fill="#555" VerticalAlignment="Center" Margin="0,60,0,0"/>
-
                                 <Control Template="{StaticResource WiimoteGraphic}" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
                                     <Control.LayoutTransform>
                                         <TransformGroup>
@@ -199,14 +198,14 @@
                                         <DropShadowEffect BlurRadius="20" Opacity="0.5" Direction="270"/>
                                     </Control.Effect>
                                 </Control>
-                                <Path Data="M0,0 L0,-40 L-10,-30 M0,-40 L10,-30" Stroke="#00D1FF" StrokeThickness="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-30,0,0"/>
-                                <TextBlock Text="TASTEN ZEIGEN ZUR DECKE" Foreground="#00D1FF" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-80,0,0"/>
+                                <Path Data="M0,0 L0,-40 L-10,-30 M0,-40 L10,-30" Stroke="{StaticResource CyanBrush}" StrokeThickness="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-30,0,0"/>
+                                <TextBlock Text="TASTEN ZEIGEN ZUR DECKE" Foreground="{StaticResource CyanBrush}" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-80,0,0"/>
                             </Grid>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,30,0">
                                 <TextBlock Text="SCHRITT 1 VON 3" Foreground="#888" FontWeight="Bold" Margin="0,0,0,20"/>
                                 <TextBlock Text="FLACH HINLEGEN" Foreground="White" FontSize="24" FontWeight="Bold"/>
                                 <TextBlock Text="Auf den Tisch legen." Foreground="White" FontSize="18" Margin="0,5,0,5"/>
-                                <TextBlock Text="Tasten zeigen nach OBEN." Foreground="#00D1FF" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="Tasten zeigen nach OBEN." Foreground="{StaticResource CyanBrush}" FontSize="16" FontWeight="Bold"/>
                             </StackPanel>
                         </Grid>
 
@@ -233,7 +232,7 @@
                             </Grid>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,30,0">
                                 <TextBlock Text="SCHRITT 2 VON 3" Foreground="#888" FontWeight="Bold" Margin="0,0,0,20"/>
-                                <TextBlock Text="TASTEN ZU DIR!" Foreground="#00D1FF" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="TASTEN ZU DIR!" Foreground="{StaticResource CyanBrush}" FontSize="24" FontWeight="Bold"/>
                                 <TextBlock Text="Zahlen zeigen nach RECHTS." Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,10,0,5"/>
                                 <TextBlock Text="(Wie Lenkrad Rechts)" Foreground="#888" FontSize="14"/>
                             </StackPanel>
@@ -262,14 +261,14 @@
                             </Grid>
                             <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,0,30,0">
                                 <TextBlock Text="SCHRITT 3 VON 3" Foreground="#888" FontWeight="Bold" Margin="0,0,0,20"/>
-                                <TextBlock Text="TASTEN ZU DIR!" Foreground="#00D1FF" FontSize="24" FontWeight="Bold"/>
+                                <TextBlock Text="TASTEN ZU DIR!" Foreground="{StaticResource CyanBrush}" FontSize="24" FontWeight="Bold"/>
                                 <TextBlock Text="Zahlen zeigen nach LINKS." Foreground="White" FontSize="18" FontWeight="Bold" Margin="0,10,0,5"/>
                                 <TextBlock Text="(Wie Lenkrad Links)" Foreground="#888" FontSize="14"/>
                             </StackPanel>
                         </Grid>
 
                         <Button x:Name="BtnStep1" Grid.Row="2" Content="FLACH POSITIONIERT ->" Width="400" Height="50" 
-                                Background="#00D1FF" Foreground="Black" FontWeight="Bold" FontSize="16"
+                                Background="{StaticResource CyanBrush}" Foreground="Black" FontWeight="Bold" FontSize="16"
                                 Click="BtnStep1_Click">
                             <Button.Resources>
                                 <Style TargetType="Border">
@@ -279,7 +278,7 @@
                         </Button>
 
                         <Button x:Name="BtnStep2" Grid.Row="2" Content="IST RECHTS ->" Width="400" Height="50" 
-                                Background="#00D1FF" Foreground="Black" FontWeight="Bold" FontSize="16"
+                                Background="{StaticResource CyanBrush}" Foreground="Black" FontWeight="Bold" FontSize="16"
                                 Visibility="Collapsed" Click="BtnStep2_Click">
                             <Button.Resources>
                                 <Style TargetType="Border">
